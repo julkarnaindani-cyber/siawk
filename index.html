@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>SI AWK - Sistem Informasi Administrasi Wali Kelas</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  
+  <!-- Google Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS CDN with Full Extended Design System -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f8f9ff",
+            "surface-dim": "#cbdbf5",
+            "surface-bright": "#f8f9ff",
+            "surface-pure-white": "#FFFFFF",
+            "surface-slate-bg": "#F8FAFC",
+            "surface-container-low": "#eff4ff",
+            "surface-container": "#e5eeff",
+            "surface-container-high": "#dce9ff",
+            "on-surface": "#0b1c30",
+            "on-surface-variant": "#464555",
+            "outline": "#777587",
+            "outline-variant": "#c7c4d8",
+            "primary": "#4F46E5",
+            "primary-container": "#4338CA",
+            "on-primary": "#ffffff",
+            "brand-indigo-electric": "#6366F1",
+            "hero-dark-900": "#0B0F19",
+            "hero-dark-800": "#111827",
+            "hero-indigo-900": "#1E1B4B",
+            "hero-indigo-800": "#312E81",
+            "accent-amber-light": "#FBBF24",
+            "accent-amber-subtle": "#FEF3C7",
+            "secondary-container": "#fea619",
+            "status-present-emerald": "#10B981",
+            "status-present-bg": "#ECFDF5",
+            "status-sick-sky": "#0284C7",
+            "status-sick-bg": "#F0F9FF",
+            "status-permission-amber": "#D97706",
+            "status-permission-bg": "#FFFBEB",
+            "status-absent-rose": "#EF4444",
+            "status-absent-bg": "#FEF2F2",
+            "pastel-cyan-bg": "#E0F2FE",
+            "pastel-cyan-fg": "#0369A1",
+            "pastel-violet-bg": "#EDE9FE",
+            "pastel-violet-fg": "#6D28D9",
+            "pastel-pink-bg": "#FCE7F3",
+            "pastel-pink-fg": "#BE185D",
+            "pastel-emerald-bg": "#D1FAE5",
+            "pastel-emerald-fg": "#047857"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans", "sans-serif"],
+            "body": ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  
+  <!-- JSZip CDN for 1-Click Browser-side Real ZIP Portability -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+
+  <!-- ========================================================
+       TOP NAVIGATION BAR (STICKY NAVIKX EDTECH STYLE)
+       ======================================================== -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-hero-dark-900/95 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.35)]">
+    <div class="h-16 w-full max-w-[1360px] mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Version -->
+      <div class="flex items-center gap-3 shrink-0 cursor-pointer" onclick="App.navigateTo('landing')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-accent-amber-light p-0.5 flex items-center justify-center shadow-md">
+          <div class="w-full h-full bg-hero-dark-900 rounded-[10px] flex items-center justify-center text-accent-amber-light">
+            <span class="material-symbols-outlined text-[24px]">school</span>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-headline text-lg text-white font-extrabold tracking-tight">SI AWK</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary/40 text-accent-amber-light border border-accent-amber-light/30">v2.4-Turbo</span>
+          </div>
+          <span class="hidden md:block text-[11px] text-gray-400 -mt-0.5">Sistem Administrasi Wali Kelas</span>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs (Instant 0ms Route Switching) -->
+      <nav class="hidden lg:flex items-center gap-1 shrink-0" id="main-nav">
+        <button class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all bg-primary text-white shadow-sm" data-target="landing" onclick="App.navigateTo('landing')">Beranda</button>
+        <button class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all text-gray-300 hover:text-white hover:bg-white/[0.08]" data-target="dasbor" onclick="App.navigateTo('dasbor')">Dasbor</button>
+        <button class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all text-gray-300 hover:text-white hover:bg-white/[0.08]" data-target="buku-induk" onclick="App.navigateTo('buku-induk')">Buku Induk</button>
+        <button class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all text-gray-300 hover:text-white hover:bg-white/[0.08]" data-target="presensi" onclick="App.navigateTo('presensi')">Presensi</button>
+        <button class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all text-gray-300 hover:text-white hover:bg-white/[0.08]" data-target="jurnal" onclick="App.navigateTo('jurnal')">Jurnal & BK</button>
+        <button class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all text-gray-300 hover:text-white hover:bg-white/[0.08]" data-target="arsip" onclick="App.navigateTo('arsip')">Arsip</button>
+        <button class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all text-gray-300 hover:text-white hover:bg-white/[0.08]" data-target="portabilitas" onclick="App.navigateTo('portabilitas')">Portabilitas ZIP</button>
+        <button class="nav-btn px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all text-gray-300 hover:text-white hover:bg-white/[0.08]" data-target="admin" onclick="App.navigateTo('admin')">Panel Admin</button>
+      </nav>
+
+      <!-- Right Action & User Profile -->
+      <div class="flex items-center gap-3 shrink-0">
+        <!-- API Connection Status Pill -->
+        <button onclick="App.openApiModal()" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/[0.08] hover:bg-white/[0.14] text-gray-300 border border-white/10 transition-colors" title="Status Koneksi Backend GAS">
+          <span id="api-status-dot" class="w-2 h-2 rounded-full bg-accent-amber-light animate-pulse"></span>
+          <span id="api-status-text" class="hidden sm:inline">Lokal / Demo</span>
+        </button>
+
+        <!-- Divider -->
+        <div class="h-6 w-px bg-white/[0.12] hidden sm:block"></div>
+
+        <!-- User Profile Pill -->
+        <div class="flex items-center gap-2 pl-1 cursor-pointer" onclick="App.navigateTo('dasbor')">
+          <div class="text-right hidden sm:block">
+            <p class="text-xs text-white font-semibold leading-tight" id="header-user-name">Bpk. Ahmad, S.Pd.</p>
+            <p class="text-[11px] text-accent-amber-light font-medium leading-tight" id="header-user-class">Wali Kelas VII-B</p>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-accent-amber-light flex items-center justify-center text-white font-bold text-xs ring-2 ring-primary/50 shadow-sm">
+            AH
+          </div>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button onclick="App.toggleMobileMenu()" class="lg:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10" aria-label="Menu">
+          <span class="material-symbols-outlined text-[24px]">menu</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Nav -->
+    <div id="mobile-nav" class="hidden lg:hidden bg-hero-dark-900 border-t border-white/[0.08] px-4 py-3 flex flex-col gap-1">
+      <button class="text-left px-3 py-2 rounded-lg text-sm font-semibold text-white hover:bg-white/10" onclick="App.navigateTo('landing'); App.toggleMobileMenu()">Beranda</button>
+      <button class="text-left px-3 py-2 rounded-lg text-sm font-semibold text-gray-300 hover:bg-white/10" onclick="App.navigateTo('dasbor'); App.toggleMobileMenu()">Dasbor Wali Kelas</button>
+      <button class="text-left px-3 py-2 rounded-lg text-sm font-semibold text-gray-300 hover:bg-white/10" onclick="App.navigateTo('buku-induk'); App.toggleMobileMenu()">Buku Induk Siswa</button>
+      <button class="text-left px-3 py-2 rounded-lg text-sm font-semibold text-gray-300 hover:bg-white/10" onclick="App.navigateTo('presensi'); App.toggleMobileMenu()">Presensi Harian</button>
+      <button class="text-left px-3 py-2 rounded-lg text-sm font-semibold text-gray-300 hover:bg-white/10" onclick="App.navigateTo('jurnal'); App.toggleMobileMenu()">Jurnal & BK</button>
+      <button class="text-left px-3 py-2 rounded-lg text-sm font-semibold text-gray-300 hover:bg-white/10" onclick="App.navigateTo('arsip'); App.toggleMobileMenu()">Arsip Dokumen</button>
+      <button class="text-left px-3 py-2 rounded-lg text-sm font-semibold text-gray-300 hover:bg-white/10" onclick="App.navigateTo('portabilitas'); App.toggleMobileMenu()">Portabilitas ZIP</button>
+      <button class="text-left px-3 py-2 rounded-lg text-sm font-semibold text-gray-300 hover:bg-white/10" onclick="App.navigateTo('admin'); App.toggleMobileMenu()">Panel Admin</button>
+    </div>
+  </header>
+
+  <!-- ========================================================
+       MAIN APP CONTAINER (INSTANT SPA VIEW SWITCHING)
+       ======================================================== -->
+  <main class="w-full pt-16 min-h-[calc(100vh-14rem)]">
+
+    <!-- ========================================================
+         VIEW 1: LANDING PAGE (NAVIKX EDTECH STYLE)
+         ======================================================== -->
+    <div id="view-landing" class="view-section active">
+      
+      <!-- HERO CANOPY -->
+      <section class="relative w-full bg-gradient-to-br from-hero-dark-900 via-hero-indigo-900 to-hero-indigo-800 text-white overflow-hidden pb-24 pt-10 sm:pt-14">
+        <!-- Ambient Glowing Orbs -->
+        <div class="absolute -top-24 right-1/4 w-96 h-96 rounded-full bg-brand-indigo-electric/25 blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 right-10 w-80 h-80 rounded-full bg-accent-amber-light/15 blur-3xl pointer-events-none"></div>
+
+        <div class="w-full max-w-[1320px] mx-auto px-4 sm:px-6 relative z-10">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            
+            <!-- Left Headline & CTAs -->
+            <div class="lg:col-span-7 flex flex-col items-start gap-4">
+              <!-- Live Pill Tag -->
+              <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-accent-amber-light animate-pulse"></span>
+                <span class="text-xs font-bold text-accent-amber-light uppercase tracking-wider">Sistem Administrasi Terintegrasi 2026/2027</span>
+              </div>
+
+              <!-- H1 Display Headline -->
+              <h1 class="font-headline text-3xl sm:text-5xl lg:text-[54px] font-extrabold leading-[1.15] tracking-tight">
+                Kelola <span class="text-accent-amber-light drop-shadow-sm">Administrasi Kelas</span> Hari Ini. Cetak Generasi Unggul Esok Hari.
+              </h1>
+
+              <!-- Description -->
+              <p class="text-base sm:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                Platform modern wali kelas berbasis Google Apps Script: Buku induk siswa, presensi 1-klik, rekam bimbingan karakter, dan modul serah-terima ZIP instan tanpa biaya server bulanan.
+              </p>
+
+              <!-- Action Buttons -->
+              <div class="flex flex-wrap items-center gap-3 pt-2 w-full sm:w-auto">
+                <button onclick="App.navigateTo('dasbor')" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-secondary-container to-accent-amber-light text-hero-indigo-900 font-headline font-bold text-sm shadow-lg hover:shadow-xl hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined text-[20px] fill-1">play_arrow</span>
+                  Mulai Kelola Kelas
+                </button>
+                <button onclick="App.navigateTo('portabilitas')" class="px-6 py-3.5 rounded-xl bg-white/10 text-white font-headline font-semibold text-sm backdrop-blur-md hover:bg-white/15 active:scale-95 transition-all flex items-center justify-center gap-2 border border-white/15">
+                  <span class="material-symbols-outlined text-[20px]">folder_zip</span>
+                  Unduh Paket Cadangan ZIP
+                </button>
+              </div>
+
+              <!-- Micro Proof Badges -->
+              <div class="flex flex-wrap items-center gap-5 pt-3 text-gray-300 text-xs font-medium">
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-status-present-emerald text-[18px]">verified_user</span>
+                  <span>100% Bebas Biaya Cloud</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-cyan-400 text-[18px]">bolt</span>
+                  <span>Latensi Lokal 0ms (Instan)</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-accent-amber-light text-[18px]">lock_reset</span>
+                  <span>Google Workspace Resmi</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Visual Composition (Teacher & Floating Glass Badges) -->
+            <div class="lg:col-span-5 relative flex justify-center items-center mt-6 lg:mt-0">
+              <div class="w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-gradient-to-tr from-primary via-brand-indigo-electric to-accent-amber-light/30 absolute -z-0 opacity-40 blur-2xl"></div>
+
+              <!-- Central Graphic Box -->
+              <div class="relative z-10 w-72 h-72 sm:w-84 sm:h-84 rounded-3xl overflow-hidden bg-hero-indigo-900/80 shadow-2xl backdrop-blur-md p-3 border border-white/20 flex flex-col justify-between">
+                <div class="flex items-center justify-between p-2">
+                  <span class="px-2.5 py-1 rounded-full bg-white/15 text-white text-[11px] font-bold">Kelas VII-B Terhubung</span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-status-present-emerald animate-ping"></span>
+                </div>
+
+                <div class="text-center py-6">
+                  <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-primary to-accent-amber-light flex items-center justify-center text-white shadow-xl mb-3">
+                    <span class="material-symbols-outlined text-[44px]">local_library</span>
+                  </div>
+                  <h3 class="font-headline text-xl font-bold text-white">Administrasi Terpadu</h3>
+                  <p class="text-xs text-gray-300 mt-1">36 Siswa • 100% Siap Audit</p>
+                </div>
+
+                <div class="bg-white/10 rounded-xl p-2.5 flex items-center justify-between text-xs text-gray-200">
+                  <span>Sinkronisasi Google Drive:</span>
+                  <span class="text-status-present-emerald font-bold">Aktif & Aman</span>
+                </div>
+              </div>
+
+              <!-- Floating Glass Badge: Presensi 1-Klik -->
+              <div class="absolute -top-3 -left-4 sm:-left-6 z-20 bg-hero-dark-900/90 backdrop-blur-xl border border-white/15 rounded-2xl px-4 py-3 shadow-xl transform hover:-translate-y-1 transition-transform">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-status-present-bg text-status-present-emerald flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[22px] fill-1">how_to_reg</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="font-headline text-xs font-bold text-white">Presensi 1-Klik</span>
+                    <span class="text-[11px] text-emerald-400 font-medium">Rekap Otomatis Hari Ini</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Floating Glass Badge: Portabilitas ZIP -->
+              <div class="absolute -bottom-4 -right-2 sm:-right-4 z-20 bg-hero-dark-900/90 backdrop-blur-xl border border-white/15 rounded-2xl px-4 py-3 shadow-xl transform hover:-translate-y-1 transition-transform">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-xl bg-accent-amber-subtle text-status-permission-amber flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[22px] fill-1">archive</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="font-headline text-xs font-bold text-white">Portabilitas ZIP</span>
+                    <span class="text-[11px] text-accent-amber-light font-medium">Migrasi Tanpa Data Hilang</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- FLOATING SEARCH PILL BRIDGE -->
+      <div class="w-full max-w-[1320px] mx-auto px-4 sm:px-6 relative z-30 -mt-8 sm:-mt-9">
+        <div class="bg-surface-pure-white rounded-2xl shadow-xl p-3 sm:p-3.5 flex flex-col md:flex-row items-center gap-2 md:gap-3 border border-slate-200">
+          <!-- Search input -->
+          <div class="flex items-center gap-2.5 flex-1 w-full px-3 py-2 bg-slate-50 rounded-xl border border-slate-200">
+            <span class="material-symbols-outlined text-gray-400 text-[22px]">search</span>
+            <input id="landing-search-input" onkeyup="App.handleLandingSearch(event)" class="bg-transparent border-0 outline-none w-full text-sm text-on-surface placeholder:text-gray-400" placeholder="Cari Siswa, NISN, atau Jurnal Catatan..." type="text"/>
+          </div>
+          <!-- Filter Kelas -->
+          <div class="flex items-center gap-2 w-full md:w-auto px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 shrink-0">
+            <span class="material-symbols-outlined text-primary text-[20px]">school</span>
+            <select id="landing-filter-class" class="bg-transparent border-0 outline-none text-xs font-semibold text-on-surface cursor-pointer pr-4">
+              <option value="VII-B" selected>Kelas VII-B (Aktif)</option>
+              <option value="VII-A">Kelas VII-A</option>
+              <option value="VIII-C">Kelas VIII-C</option>
+              <option value="IX-A">Kelas IX-A</option>
+            </select>
+          </div>
+          <!-- Filter Tahun -->
+          <div class="flex items-center gap-2 w-full md:w-auto px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 shrink-0">
+            <span class="material-symbols-outlined text-status-permission-amber text-[20px]">calendar_month</span>
+            <select class="bg-transparent border-0 outline-none text-xs font-semibold text-on-surface cursor-pointer pr-4">
+              <option>TA 2026/2027 (Ganjil)</option>
+              <option>TA 2025/2026 (Genap)</option>
+            </select>
+          </div>
+          <!-- Action Button -->
+          <button onclick="App.triggerLandingSearch()" class="w-full md:w-auto px-6 py-2.5 rounded-xl bg-primary text-white font-headline text-xs font-bold hover:bg-primary-container active:scale-95 transition-all flex items-center justify-center gap-1.5 shrink-0 shadow-md">
+            <span>Cari Cepat</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- QUICK METRICS GRID (4 COLUMNS - PURE WHITE CARDS) -->
+      <section class="w-full max-w-[1320px] mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Card 1: Siswa -->
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-md transition-all cursor-pointer" onclick="App.navigateTo('buku-induk')">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Populasi Siswa</span>
+              <div class="w-9 h-9 rounded-xl bg-pastel-cyan-bg text-pastel-cyan-fg flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">groups</span>
+              </div>
+            </div>
+            <div class="mt-4">
+              <p class="font-headline text-2xl font-extrabold text-on-surface tracking-tight" id="metric-landing-total-siswa">36 Siswa</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-xs text-gray-500">18 Laki-laki, 18 Perempuan</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Kehadiran -->
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-md transition-all cursor-pointer" onclick="App.navigateTo('presensi')">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Tingkat Presensi</span>
+              <div class="w-9 h-9 rounded-xl bg-pastel-emerald-bg text-pastel-emerald-fg flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">verified</span>
+              </div>
+            </div>
+            <div class="mt-4">
+              <p class="font-headline text-2xl font-extrabold text-status-present-emerald tracking-tight" id="metric-landing-kehadiran">98.2%</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-status-present-bg text-status-present-emerald text-[11px] font-bold">
+                  <span class="material-symbols-outlined text-[13px]">trending_up</span>+1.4% semester ini
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Jurnal -->
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-md transition-all cursor-pointer" onclick="App.navigateTo('jurnal')">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Jurnal Karakter</span>
+              <div class="w-9 h-9 rounded-xl bg-pastel-violet-bg text-pastel-violet-fg flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">psychology</span>
+              </div>
+            </div>
+            <div class="mt-4">
+              <p class="font-headline text-2xl font-extrabold text-pastel-violet-fg tracking-tight" id="metric-landing-jurnal">15 Catatan</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-pastel-violet-bg text-pastel-violet-fg text-[11px] font-bold">
+                  12 Prestasi • 3 Bimbingan
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Status Arsip -->
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-md transition-all cursor-pointer" onclick="App.navigateTo('portabilitas')">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Status Portabilitas</span>
+              <div class="w-9 h-9 rounded-xl bg-accent-amber-subtle text-status-permission-amber flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">cloud_done</span>
+              </div>
+            </div>
+            <div class="mt-4">
+              <p class="font-headline text-2xl font-extrabold text-on-surface tracking-tight">100% Siap</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-status-permission-bg text-status-permission-amber text-[11px] font-bold">
+                  Backup ZIP Terverifikasi
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURE CATEGORY SECTION (TOP CATEGORY INSPIRATION) -->
+      <section class="w-full max-w-[1320px] mx-auto px-4 sm:px-6 py-6">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
+          <div>
+            <span class="text-xs font-bold text-primary uppercase tracking-widest">Fasilitas Digital Terpadu</span>
+            <h2 class="font-headline text-2xl sm:text-3xl text-on-surface font-extrabold tracking-tight mt-1">Modul Utama Wali Kelas</h2>
+          </div>
+          <button onclick="App.navigateTo('dasbor')" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline self-start sm:self-auto">
+            Buka Ruang Kerja Dasbor <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Card 1: Buku Induk -->
+          <div onclick="App.navigateTo('buku-induk')" class="group bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-xl hover:-translate-y-1.5 transition-all flex flex-col justify-between cursor-pointer">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-pastel-cyan-bg text-pastel-cyan-fg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[26px] fill-1">badge</span>
+              </div>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-pastel-cyan-bg text-pastel-cyan-fg text-[10px] uppercase font-bold mb-2">36 Berkas Siswa</span>
+              <h3 class="font-headline text-base text-on-surface font-bold">Buku Induk Digital</h3>
+              <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                Biodata lengkap murid, riwayat kontak orang tua/wali, dan rekam identitas siswa terhubung Google Spreadsheet.
+              </p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-xs text-primary font-bold group-hover:underline">Buka Data Siswa</span>
+              <span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors text-[18px]">chevron_right</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Presensi -->
+          <div onclick="App.navigateTo('presensi')" class="group bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-xl hover:-translate-y-1.5 transition-all flex flex-col justify-between cursor-pointer">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-pastel-violet-bg text-pastel-violet-fg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[26px] fill-1">check_circle</span>
+              </div>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-pastel-violet-bg text-pastel-violet-fg text-[10px] uppercase font-bold mb-2">1-Klik Checklist</span>
+              <h3 class="font-headline text-base text-on-surface font-bold">Presensi Realtime</h3>
+              <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                Pencatatan harian Hadir, Sakit, Izin, Alpa tanpa lag. Sekali klik untuk cetak rekapitulasi presensi bulanan standar dinas.
+              </p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-xs text-pastel-violet-fg font-bold group-hover:underline">Catat Presensi Hari Ini</span>
+              <span class="material-symbols-outlined text-gray-400 group-hover:text-pastel-violet-fg transition-colors text-[18px]">chevron_right</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Jurnal BK -->
+          <div onclick="App.navigateTo('jurnal')" class="group bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-xl hover:-translate-y-1.5 transition-all flex flex-col justify-between cursor-pointer">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-accent-amber-subtle text-status-permission-amber flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[26px] fill-1">emoji_events</span>
+              </div>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-accent-amber-subtle text-status-permission-amber text-[10px] uppercase font-bold mb-2">P5 & Karakter</span>
+              <h3 class="font-headline text-base text-on-surface font-bold">Jurnal BK & Prestasi</h3>
+              <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                Dokumentasi pembiasaan sikap positif, bimbingan konseling individual, serta rekam medali dan penghargaan siswa.
+              </p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-xs text-status-permission-amber font-bold group-hover:underline">Lihat Log Jurnal</span>
+              <span class="material-symbols-outlined text-gray-400 group-hover:text-status-permission-amber transition-colors text-[18px]">chevron_right</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Portabilitas ZIP -->
+          <div onclick="App.navigateTo('portabilitas')" class="group bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-xl hover:-translate-y-1.5 transition-all flex flex-col justify-between cursor-pointer">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-pastel-emerald-bg text-pastel-emerald-fg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[26px] fill-1">cloud_sync</span>
+              </div>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-pastel-emerald-bg text-pastel-emerald-fg text-[10px] uppercase font-bold mb-2">Zero Loss Engine</span>
+              <h3 class="font-headline text-base text-on-surface font-bold">Portabilitas ZIP</h3>
+              <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                Paket cadangan seluruh data kelas dalam satu arsip ZIP. Kompatibel penuh untuk serah-terima instan wali kelas baru.
+              </p>
+            </div>
+            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-xs text-pastel-emerald-fg font-bold group-hover:underline">Buka Hub Portabilitas</span>
+              <span class="material-symbols-outlined text-gray-400 group-hover:text-pastel-emerald-fg transition-colors text-[18px]">chevron_right</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SIMULATION PRESENCE WIDGET (INTERACTIVE EDITORIAL SECTION) -->
+      <section class="w-full max-w-[1320px] mx-auto px-4 sm:px-6 py-6">
+        <div class="bg-surface-pure-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Left Info -->
+            <div class="lg:col-span-6 flex flex-col gap-4">
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary self-start text-xs uppercase font-bold">
+                <span class="material-symbols-outlined text-[16px]">verified</span>
+                Standar Kurikulum Merdeka
+              </div>
+              <h2 class="font-headline text-2xl sm:text-3xl text-on-surface font-extrabold leading-snug">
+                Tinggalkan Format Manual Yang Rumit. Mulai Otomatisasi Administrasi Kelas Anda.
+              </h2>
+              <p class="text-sm text-gray-600 leading-relaxed">
+                Sistem Informasi SI AWK menyederhanakan tata kelola administratif wali kelas ke dalam ekosistem terpadu yang ringan, bebas lag, dan siap cetak kapan saja.
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-status-present-bg text-status-present-emerald flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[18px]">check</span>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold text-on-surface">Formulir 1-Layar</p>
+                    <p class="text-[11px] text-gray-500">Input minim klik dan tersimpan seketika</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-pastel-cyan-bg text-pastel-cyan-fg flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[18px]">print</span>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold text-on-surface">Cetak Laporan Resmi</p>
+                    <p class="text-[11px] text-gray-500">Format PDF siap tanda tangan kepala sekolah</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-pastel-violet-bg text-pastel-violet-fg flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[18px]">lock</span>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold text-on-surface">Keamanan Teruji</p>
+                    <p class="text-[11px] text-gray-500">Hak akses terproteksi Script Properties</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-accent-amber-subtle text-status-permission-amber flex items-center justify-center shrink-0">
+                    <span class="material-symbols-outlined text-[18px]">offline_pin</span>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold text-on-surface">Mode Cepat Offline</p>
+                    <p class="text-[11px] text-gray-500">Tetap responsif saat jaringan lambat</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2">
+                <button onclick="App.navigateTo('presensi')" class="px-6 py-2.5 rounded-xl bg-primary text-white font-headline text-xs font-bold shadow-md hover:bg-primary-container active:scale-95 transition-all">
+                  Buka Modul Presensi Penuh
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Interactive Snapshot -->
+            <div class="lg:col-span-6 bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col gap-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[20px]">task_alt</span>
+                  </div>
+                  <div>
+                    <h4 class="font-headline text-sm font-bold text-on-surface">Pratinjau Presensi Hari Ini</h4>
+                    <p class="text-xs text-gray-500">Kelas VII-B • Tanggal: <span id="landing-preview-date"></span></p>
+                  </div>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full bg-status-present-bg text-status-present-emerald text-xs font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-status-present-emerald"></span> Aktif
+                </span>
+              </div>
+
+              <!-- Student Rows Preview -->
+              <div class="flex flex-col gap-2 pt-1" id="landing-mini-presence-list">
+                <!-- Injected via JavaScript -->
+              </div>
+
+              <div class="flex items-center justify-between pt-2 border-t border-slate-200/80">
+                <span class="text-[11px] text-gray-500">Tersinkronisasi ke Google Spreadsheet</span>
+                <button onclick="App.navigateTo('presensi')" class="text-primary text-xs font-bold hover:underline flex items-center gap-1">
+                  Kelola Presensi Penuh <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- CLASS HANDOVER / ZIP BACKUP BANNER (VIOLET GRADIENT) -->
+      <section class="w-full max-w-[1320px] mx-auto px-4 sm:px-6 py-6 pb-14">
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary-container via-hero-indigo-800 to-pastel-violet-fg p-6 sm:p-10 text-white shadow-xl">
+          <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-accent-amber-light/20 blur-3xl pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div class="flex flex-col gap-2 max-w-2xl">
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-accent-amber-light text-xs uppercase font-bold self-start backdrop-blur-md">
+                <span class="material-symbols-outlined text-[16px] fill-1">published_with_changes</span>
+                Engine Serah Terima Kelas
+              </div>
+              <h2 class="font-headline text-2xl sm:text-3xl font-extrabold tracking-tight leading-snug">
+                Pergantian Tahun Ajaran atau Rotasi Wali Kelas?
+              </h2>
+              <p class="text-sm text-gray-200 leading-relaxed">
+                Cadangkan seluruh data tabel spreadsheet dan file Google Drive dalam satu paket ZIP terverifikasi. Wali kelas baru dapat langsung memulihkan data dalam 30 detik tanpa risiko formula rusak.
+              </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+              <button onclick="App.navigateTo('portabilitas')" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-secondary-container to-accent-amber-light text-hero-indigo-900 font-headline font-bold text-xs shadow-lg hover:shadow-xl hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">history</span>
+                Coba Simulasi Restore ZIP
+              </button>
+              <button onclick="App.exportZipNow()" class="w-full sm:w-auto px-5 py-3.5 rounded-xl bg-white/15 text-white font-headline font-semibold text-xs backdrop-blur-md hover:bg-white/20 active:scale-95 transition-all flex items-center justify-center gap-2 border border-white/20">
+                <span class="material-symbols-outlined text-[18px]">download</span>
+                Ekspor ZIP Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========================================================
+         VIEW 2: DASBOR WALI KELAS VII-B
+         ======================================================== -->
+    <div id="view-dasbor" class="view-section">
+      <!-- Ambient Dark Header -->
+      <div class="relative w-full bg-hero-dark-900 overflow-hidden pb-14 pt-8 px-4 sm:px-6">
+        <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-brand-indigo-electric/20 blur-3xl pointer-events-none"></div>
+        <div class="max-w-[1320px] mx-auto flex flex-col md:flex-row md:items-end justify-between gap-4 relative z-10">
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/40 text-indigo-200 tracking-wider uppercase">Kelas Binaan Aktif</span>
+              <span class="text-xs text-gray-300 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-status-present-emerald animate-pulse"></span>
+                Semester Ganjil 2026/2027
+              </span>
+            </div>
+            <div class="flex items-baseline gap-2">
+              <h1 class="font-headline text-2xl sm:text-3xl text-white font-bold tracking-tight" id="dash-teacher-title">Dasbor Bpk. Ahmad, S.Pd.</h1>
+              <span class="font-headline text-lg text-accent-amber-light font-semibold">/ VII-B</span>
+            </div>
+            <p class="text-xs sm:text-sm text-gray-400 max-w-xl">
+              Ruang kendali terintegrasi administrasi kelas, rekapitulasi presensi, dan pendampingan karakter siswa.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="App.navigateTo('presensi')" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white text-xs font-semibold transition-all shadow-sm">
+              <span class="material-symbols-outlined text-[18px] text-accent-amber-light">analytics</span>
+              <span>Rekap Presensi</span>
+            </button>
+            <button onclick="App.navigateTo('portabilitas')" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-semibold transition-all shadow-md">
+              <span class="material-symbols-outlined text-[18px]">archive</span>
+              <span>Cadangan Kelas</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Container Overlap -->
+      <div class="max-w-[1320px] mx-auto w-full px-4 sm:px-6 -mt-8 relative z-20 pb-16 flex flex-col gap-6">
+        
+        <!-- Urgent Attendance Banner Alert -->
+        <div id="alertBanner" class="w-full bg-status-permission-bg rounded-2xl shadow-md p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-amber-200 transition-all">
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="w-11 h-11 rounded-xl bg-accent-amber-subtle text-status-permission-amber flex items-center justify-center shrink-0 shadow-sm">
+              <span class="material-symbols-outlined text-[26px] fill-1">timer</span>
+            </div>
+            <div class="flex flex-col min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs text-status-permission-amber font-bold uppercase tracking-wider">Perhatian Wali Kelas</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-status-permission-amber"></span>
+                <span class="text-[11px] text-gray-600">Presensi Hari Ini</span>
+              </div>
+              <p class="font-headline text-sm sm:text-base text-on-surface font-semibold truncate">
+                Presensi harian belum dikunci <span class="font-normal text-gray-600" id="dash-alert-presence-detail">(34 Hadir, 2 Belum Ditandai)</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="document.getElementById('alertBanner').style.display='none'" class="px-3 py-2 text-gray-600 hover:text-on-surface text-xs font-medium rounded-lg hover:bg-black/5 transition-all">
+              Tutup
+            </button>
+            <button onclick="App.navigateTo('presensi')" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold transition-all shadow-md">
+              <span>Selesaikan Presensi</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI 4 Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Card 1: Siswa -->
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-2">
+              <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total Siswa Binaan</span>
+              <div class="w-9 h-9 rounded-xl bg-pastel-cyan-bg text-pastel-cyan-fg flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">groups</span>
+              </div>
+            </div>
+            <div class="flex flex-col gap-0.5 my-1">
+              <div class="flex items-baseline gap-1.5">
+                <span class="font-headline text-3xl font-extrabold text-on-surface tracking-tight" id="dash-total-siswa">36</span>
+                <span class="text-sm text-gray-500 font-medium">Siswa</span>
+              </div>
+              <div class="flex items-center gap-2 text-xs text-gray-500 pt-1">
+                <span class="font-semibold text-on-surface" id="dash-count-l">18 L</span>
+                <span>/</span>
+                <span class="font-semibold text-on-surface" id="dash-count-p">18 P</span>
+                <span class="inline-flex px-1.5 py-0.5 rounded text-[10px] font-bold bg-pastel-emerald-bg text-pastel-emerald-fg ml-auto">100% Aktif</span>
+              </div>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden flex">
+              <div class="bg-brand-indigo-electric h-full w-1/2"></div>
+              <div class="bg-pastel-pink-fg h-full w-1/2"></div>
+            </div>
+          </div>
+
+          <!-- Card 2: Kehadiran -->
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-2">
+              <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Kehadiran Hari Ini</span>
+              <div class="w-9 h-9 rounded-xl bg-pastel-emerald-bg text-pastel-emerald-fg flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+              </div>
+            </div>
+            <div class="flex flex-col gap-0.5 my-1">
+              <div class="flex items-baseline gap-1.5">
+                <span class="font-headline text-3xl font-extrabold text-status-present-emerald tracking-tight" id="dash-rate-kehadiran">94.4%</span>
+                <span class="text-xs text-status-present-emerald font-semibold">Aktual</span>
+              </div>
+              <p class="text-xs text-gray-500 pt-1 truncate" id="dash-presence-summary">
+                34 Hadir • 1 Sakit • 1 Izin • 0 Alpa
+              </p>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden flex">
+              <div class="bg-status-present-emerald h-full w-[94.4%]"></div>
+              <div class="bg-status-sick-sky h-full w-[2.8%]"></div>
+              <div class="bg-status-permission-amber h-full w-[2.8%]"></div>
+            </div>
+          </div>
+
+          <!-- Card 3: Jurnal -->
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-2">
+              <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Jurnal Pembinaan</span>
+              <div class="w-9 h-9 rounded-xl bg-pastel-violet-bg text-pastel-violet-fg flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">psychology</span>
+              </div>
+            </div>
+            <div class="flex flex-col gap-0.5 my-1">
+              <div class="flex items-baseline gap-1.5">
+                <span class="font-headline text-3xl font-extrabold text-on-surface tracking-tight" id="dash-total-jurnal">15</span>
+                <span class="text-sm text-gray-500 font-medium">Catatan</span>
+              </div>
+              <p class="text-xs text-gray-500 pt-1 truncate">
+                12 Prestasi • 3 Bimbingan
+              </p>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 text-xs text-pastel-violet-fg font-bold">
+              <span class="material-symbols-outlined text-[16px]">verified</span>
+              <span>Semester Berjalan</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Arsip -->
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-2">
+              <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Arsip Dokumen</span>
+              <div class="w-9 h-9 rounded-xl bg-accent-amber-subtle text-status-permission-amber flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">folder_special</span>
+              </div>
+            </div>
+            <div class="flex flex-col gap-0.5 my-1">
+              <div class="flex items-baseline gap-1.5">
+                <span class="font-headline text-3xl font-extrabold text-on-surface tracking-tight" id="dash-total-arsip">6</span>
+                <span class="text-sm text-gray-500 font-medium">Berkas</span>
+              </div>
+              <p class="text-xs text-gray-500 pt-1 truncate">
+                Google Drive Terhubung
+              </p>
+            </div>
+            <div class="flex items-center gap-1.5 mt-2 text-xs text-status-permission-amber font-bold">
+              <span class="material-symbols-outlined text-[16px]">cloud_done</span>
+              <span>100% Tersimpan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Split Grid: Weekly Attendance Chart & Recent Guidance -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Left: Attendance Chart Simulation & Shortcuts (7 Cols) -->
+          <div class="lg:col-span-7 bg-surface-pure-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-headline text-base font-bold text-on-surface">Tren Kehadiran Mingguan</h3>
+                <p class="text-xs text-gray-500">Persentase kehadiran kelas hari Senin s.d. Jumat</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-slate-100 text-gray-700 text-xs font-bold">Minggu Ke-10</span>
+            </div>
+
+            <!-- CSS Bar Chart -->
+            <div class="h-48 flex items-end justify-between gap-3 pt-6 pb-2 px-2 border-b border-slate-100">
+              <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                <span class="text-[11px] font-bold text-gray-600">97.2%</span>
+                <div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 97.2%;">
+                  <div class="w-full h-full bg-primary rounded-t-lg"></div>
+                </div>
+                <span class="text-xs text-gray-500 font-medium">Sen</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                <span class="text-[11px] font-bold text-gray-600">100%</span>
+                <div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 100%;">
+                  <div class="w-full h-full bg-primary rounded-t-lg"></div>
+                </div>
+                <span class="text-xs text-gray-500 font-medium">Sel</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                <span class="text-[11px] font-bold text-gray-600">94.4%</span>
+                <div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 94.4%;">
+                  <div class="w-full h-full bg-primary rounded-t-lg"></div>
+                </div>
+                <span class="text-xs text-gray-500 font-medium">Rab</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                <span class="text-[11px] font-bold text-gray-600">97.2%</span>
+                <div class="w-full bg-primary/20 rounded-t-lg transition-all hover:bg-primary" style="height: 97.2%;">
+                  <div class="w-full h-full bg-primary rounded-t-lg"></div>
+                </div>
+                <span class="text-xs text-gray-500 font-medium">Kam</span>
+              </div>
+              <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                <span class="text-[11px] font-bold text-accent-amber-light">94.4%</span>
+                <div class="w-full bg-accent-amber-light/30 rounded-t-lg transition-all hover:bg-accent-amber-light" style="height: 94.4%;">
+                  <div class="w-full h-full bg-accent-amber-light rounded-t-lg"></div>
+                </div>
+                <span class="text-xs font-bold text-on-surface">Jum (Kini)</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-gray-500 pt-1">
+              <span>Target Rata-rata Sekolah: <strong class="text-on-surface">95.0%</strong></span>
+              <button onclick="App.navigateTo('presensi')" class="text-primary font-bold hover:underline flex items-center gap-1">
+                Buka Matriks Lengkap <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Guidance Log & Document Shortcuts (5 Cols) -->
+          <div class="lg:col-span-5 flex flex-col gap-4">
+            
+            <!-- Recent Guidance -->
+            <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-headline text-sm font-bold text-on-surface">Catatan Karakter Terkini</h3>
+                <button onclick="App.navigateTo('jurnal')" class="text-xs font-bold text-primary hover:underline">Semua</button>
+              </div>
+              <div class="flex flex-col gap-2.5" id="dash-recent-journal-list">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Quick Document Downloads -->
+            <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200">
+              <h3 class="font-headline text-sm font-bold text-on-surface mb-3">Pintasan Administrasi Penting</h3>
+              <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
+                <button onclick="App.downloadDoc('Jadwal Regu Piket 7K & Pembiasaan Pagi.xlsx')" class="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 text-left transition-colors">
+                  <span class="material-symbols-outlined text-status-present-emerald text-[20px]">table_view</span>
+                  <span class="truncate">Jadwal Piket.xlsx</span>
+                </button>
+                <button onclick="App.downloadDoc('Denah Tempat Duduk Siswa Semester Ganjil.pdf')" class="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 text-left transition-colors">
+                  <span class="material-symbols-outlined text-rose-500 text-[20px]">picture_as_pdf</span>
+                  <span class="truncate">Denah Duduk.pdf</span>
+                </button>
+                <button onclick="App.downloadDoc('Struktur Organisasi & Kepengurusan Kelas VII-B.pdf')" class="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center gap-2 text-left transition-colors">
+                  <span class="material-symbols-outlined text-rose-500 text-[20px]">picture_as_pdf</span>
+                  <span class="truncate">Struktur Kelas.pdf</span>
+                </button>
+                <button onclick="App.exportZipNow()" class="p-2.5 rounded-xl bg-accent-amber-subtle hover:bg-amber-100 border border-amber-200 text-status-permission-amber flex items-center gap-2 text-left transition-colors font-bold">
+                  <span class="material-symbols-outlined text-[20px]">folder_zip</span>
+                  <span class="truncate">Backup ZIP (.zip)</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         VIEW 3: BUKU INDUK SISWA
+         ======================================================== -->
+    <div id="view-buku-induk" class="view-section">
+      <div class="max-w-[1320px] mx-auto px-4 sm:px-6 py-6 flex flex-col gap-5">
+        
+        <!-- Header & Action Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-primary uppercase tracking-wider">Buku Induk Digital</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pastel-cyan-bg text-pastel-cyan-fg">Kelas VII-B</span>
+            </div>
+            <h1 class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight mt-0.5">Daftar & Biodata Siswa</h1>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="App.exportStudentsCsv()" class="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-on-surface text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">download</span>
+              <span>Ekspor Excel/CSV</span>
+            </button>
+            <button onclick="App.openAddStudentModal()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-md active:scale-95 transition-all flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">person_add</span>
+              <span>+ Tambah Siswa Baru</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="bg-surface-pure-white rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center gap-3">
+          <div class="flex items-center gap-2 flex-1 w-full px-3 py-2 bg-slate-50 rounded-xl border border-slate-200">
+            <span class="material-symbols-outlined text-gray-400 text-[20px]">search</span>
+            <input id="student-search-input" onkeyup="App.filterStudents()" class="bg-transparent border-0 outline-none w-full text-xs text-on-surface placeholder:text-gray-400" placeholder="Cari nama siswa, NIS, atau NISN..."/>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <select id="student-filter-gender" onchange="App.filterStudents()" class="px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs font-semibold text-on-surface outline-none cursor-pointer">
+              <option value="ALL">Semua Gender (L/P)</option>
+              <option value="L">Laki-laki (L)</option>
+              <option value="P">Perempuan (P)</option>
+            </select>
+            <select id="student-filter-status" onchange="App.filterStudents()" class="px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs font-semibold text-on-surface outline-none cursor-pointer">
+              <option value="ALL">Semua Status</option>
+              <option value="Aktif" selected>Status: Aktif</option>
+              <option value="Pindah">Status: Mutasi/Pindah</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Students Table -->
+        <div class="bg-surface-pure-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-gray-500 uppercase tracking-wider font-bold">
+                <tr>
+                  <th class="py-3 px-4 w-12 text-center">No</th>
+                  <th class="py-3 px-4">Siswa</th>
+                  <th class="py-3 px-4">NIS / NISN</th>
+                  <th class="py-3 px-4 text-center">L/P</th>
+                  <th class="py-3 px-4">Kontak Orang Tua</th>
+                  <th class="py-3 px-4">Alamat Rumah</th>
+                  <th class="py-3 px-4 text-center">Status</th>
+                  <th class="py-3 px-4 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="student-table-body" class="divide-y divide-slate-100">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+          <div class="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-gray-500">
+            <span id="student-pagination-info">Menampilkan 36 siswa</span>
+            <span class="text-[11px]">Database terenkripsi Google Workspace</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         VIEW 4: PRESENSI HARIAN & REKAP BULANAN
+         ======================================================== -->
+    <div id="view-presensi" class="view-section">
+      <div class="max-w-[1320px] mx-auto px-4 sm:px-6 py-6 flex flex-col gap-5">
+        
+        <!-- Header & Date Controls -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-primary uppercase tracking-wider">Modul Presensi Siswa</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pastel-emerald-bg text-pastel-emerald-fg">Kelas VII-B</span>
+            </div>
+            <h1 class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight mt-0.5">Presensi Harian & Matriks Rekap</h1>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="date" id="presence-date-picker" onchange="App.handleDateChange(this.value)" class="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-on-surface shadow-sm outline-none cursor-pointer"/>
+            <button onclick="App.markAllPresent()" class="px-4 py-2.5 rounded-xl bg-status-present-bg text-status-present-emerald border border-emerald-200 text-xs font-bold hover:bg-emerald-100 active:scale-95 transition-all flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">done_all</span>
+              <span>Tandai Semua Hadir</span>
+            </button>
+            <button onclick="App.saveAttendanceToday()" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-md active:scale-95 transition-all flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">lock</span>
+              <span>Kunci & Simpan</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Attendance Counter Chips (H, S, I, A) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-status-present-bg border border-emerald-200 rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-status-present-emerald uppercase tracking-wider">Hadir (H)</span>
+              <p class="font-headline text-2xl font-extrabold text-status-present-emerald mt-1" id="count-h">34</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-status-present-emerald text-white flex items-center justify-center font-bold text-base">H</div>
+          </div>
+          <div class="bg-status-sick-bg border border-sky-200 rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-status-sick-sky uppercase tracking-wider">Sakit (S)</span>
+              <p class="font-headline text-2xl font-extrabold text-status-sick-sky mt-1" id="count-s">1</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-status-sick-sky text-white flex items-center justify-center font-bold text-base">S</div>
+          </div>
+          <div class="bg-status-permission-bg border border-amber-200 rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-status-permission-amber uppercase tracking-wider">Izin (I)</span>
+              <p class="font-headline text-2xl font-extrabold text-status-permission-amber mt-1" id="count-i">1</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-status-permission-amber text-white flex items-center justify-center font-bold text-base">I</div>
+          </div>
+          <div class="bg-status-absent-bg border border-rose-200 rounded-2xl p-4 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-status-absent-rose uppercase tracking-wider">Alpa (A)</span>
+              <p class="font-headline text-2xl font-extrabold text-status-absent-rose mt-1" id="count-a">0</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-status-absent-rose text-white flex items-center justify-center font-bold text-base">A</div>
+          </div>
+        </div>
+
+        <!-- Attendance Checklist Table -->
+        <div class="bg-surface-pure-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-700">Daftar Kehadiran Siswa Kelas VII-B</span>
+            <button onclick="window.print()" class="text-xs font-semibold text-primary hover:underline flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">print</span>
+              Cetak Rekap Resmi
+            </button>
+          </div>
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-gray-500 uppercase tracking-wider font-bold">
+                <tr>
+                  <th class="py-3 px-4 w-12 text-center">No</th>
+                  <th class="py-3 px-4">Nama Siswa</th>
+                  <th class="py-3 px-4">NIS</th>
+                  <th class="py-3 px-4 text-center w-52">Status Kehadiran</th>
+                  <th class="py-3 px-4">Catatan Keterangan</th>
+                </tr>
+              </thead>
+              <tbody id="presence-table-body" class="divide-y divide-slate-100">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         VIEW 5: JURNAL BK & PRESTASI
+         ======================================================== -->
+    <div id="view-jurnal" class="view-section">
+      <div class="max-w-[1320px] mx-auto px-4 sm:px-6 py-6 flex flex-col gap-5">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-primary uppercase tracking-wider">Jurnal Karakter & Bimbingan</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pastel-violet-bg text-pastel-violet-fg">Kelas VII-B</span>
+            </div>
+            <h1 class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight mt-0.5">Catatan Pembinaan & Prestasi</h1>
+          </div>
+          <button onclick="App.openAddJournalModal()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-md active:scale-95 transition-all flex items-center gap-1.5 self-start sm:self-auto">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            <span>+ Catat Kejadian / Bimbingan</span>
+          </button>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1">
+          <button onclick="App.filterJournal('ALL')" class="jurnal-tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-primary text-white shadow-sm" data-category="ALL">Semua Catatan</button>
+          <button onclick="App.filterJournal('Prestasi')" class="jurnal-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-gray-600 hover:bg-slate-50 border border-slate-200" data-category="Prestasi">🏆 Prestasi & Juara</button>
+          <button onclick="App.filterJournal('Bimbingan')" class="jurnal-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-gray-600 hover:bg-slate-50 border border-slate-200" data-category="Bimbingan">🤝 Bimbingan Konseling</button>
+          <button onclick="App.filterJournal('Pelanggaran')" class="jurnal-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white text-gray-600 hover:bg-slate-50 border border-slate-200" data-category="Pelanggaran">⚠️ Pelanggaran Tata Tertib</button>
+        </div>
+
+        <!-- Journal Table -->
+        <div class="bg-surface-pure-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-gray-500 uppercase tracking-wider font-bold">
+                <tr>
+                  <th class="py-3 px-4 w-28">Tanggal</th>
+                  <th class="py-3 px-4">Nama Siswa</th>
+                  <th class="py-3 px-4 text-center w-28">Kategori</th>
+                  <th class="py-3 px-4">Judul Kejadian & Uraian</th>
+                  <th class="py-3 px-4">Tindak Lanjut Wali Kelas</th>
+                  <th class="py-3 px-4 text-center w-28">Status</th>
+                </tr>
+              </thead>
+              <tbody id="journal-table-body" class="divide-y divide-slate-100">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         VIEW 6: ARSIP DOKUMEN DIGITAL KELAS
+         ======================================================== -->
+    <div id="view-arsip" class="view-section">
+      <div class="max-w-[1320px] mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-primary uppercase tracking-wider">Digital Storage Cabinet</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-accent-amber-subtle text-status-permission-amber">Google Drive Sync</span>
+            </div>
+            <h1 class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight mt-0.5">Pusat Berkas & Arsip Kelas</h1>
+          </div>
+          <button onclick="App.openUploadDocModal()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-md active:scale-95 transition-all flex items-center gap-1.5 self-start sm:self-auto">
+            <span class="material-symbols-outlined text-[18px]">cloud_upload</span>
+            <span>+ Unggah Dokumen</span>
+          </button>
+        </div>
+
+        <!-- Folder Categories Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div class="w-10 h-10 rounded-xl bg-pastel-cyan-bg text-pastel-cyan-fg flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-[24px]">folder</span>
+            </div>
+            <div>
+              <h4 class="font-headline text-sm font-bold text-on-surface">Administrasi Pokok</h4>
+              <p class="text-xs text-gray-500 mt-1">SK, Struktur, Jadwal Piket, Denah</p>
+            </div>
+            <span class="text-[11px] font-bold text-primary mt-3">4 Berkas Tersimpan</span>
+          </div>
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div class="w-10 h-10 rounded-xl bg-pastel-emerald-bg text-pastel-emerald-fg flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-[24px]">folder</span>
+            </div>
+            <div>
+              <h4 class="font-headline text-sm font-bold text-on-surface">Surat Izin & Dispensasi</h4>
+              <p class="text-xs text-gray-500 mt-1">Surat dokter & izin permohonan</p>
+            </div>
+            <span class="text-[11px] font-bold text-pastel-emerald-fg mt-3">1 Berkas Tersimpan</span>
+          </div>
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div class="w-10 h-10 rounded-xl bg-pastel-violet-bg text-pastel-violet-fg flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-[24px]">folder</span>
+            </div>
+            <div>
+              <h4 class="font-headline text-sm font-bold text-on-surface">Laporan Wali Kelas</h4>
+              <p class="text-xs text-gray-500 mt-1">Laporan berkala & evaluasi siswa</p>
+            </div>
+            <span class="text-[11px] font-bold text-pastel-violet-fg mt-3">1 Berkas Tersimpan</span>
+          </div>
+          <div class="bg-surface-pure-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+            <div class="w-10 h-10 rounded-xl bg-accent-amber-subtle text-status-permission-amber flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-[24px]">folder_zip</span>
+            </div>
+            <div>
+              <h4 class="font-headline text-sm font-bold text-on-surface">Paket Portabilitas</h4>
+              <p class="text-xs text-gray-500 mt-1">Backup kompresi ZIP (.zip)</p>
+            </div>
+            <span class="text-[11px] font-bold text-status-permission-amber mt-3">Siap Diekspor</span>
+          </div>
+        </div>
+
+        <!-- Document Table -->
+        <div class="bg-surface-pure-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-700">Daftar Dokumen Digital Tersimpan</span>
+            <span class="text-xs text-gray-500">Total: 6 Dokumen</span>
+          </div>
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-gray-500 uppercase tracking-wider font-bold">
+                <tr>
+                  <th class="py-3 px-4">Nama Dokumen</th>
+                  <th class="py-3 px-4">Kategori</th>
+                  <th class="py-3 px-4">Ukuran</th>
+                  <th class="py-3 px-4">Tanggal Unggah</th>
+                  <th class="py-3 px-4 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="document-table-body" class="divide-y divide-slate-100">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========================================================
+         VIEW 7: PUSAT PORTABILITAS & RESTORE ZIP
+         ======================================================== -->
+    <div id="view-portabilitas" class="view-section">
+      <!-- Dark Atmospheric Top Banner -->
+      <section class="relative w-full overflow-hidden bg-hero-dark-900 pb-20 pt-8 text-white px-4 sm:px-6">
+        <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-brand-indigo-electric/25 blur-3xl"></div>
+        <div class="relative mx-auto w-full max-w-[1320px]">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-3">
+            <div class="inline-flex items-center gap-2 rounded-full bg-white/[0.08] px-3 py-1 shadow-sm backdrop-blur-md">
+              <span class="inline-block h-2 w-2 rounded-full bg-status-present-emerald animate-pulse"></span>
+              <span class="text-xs font-bold tracking-widest text-accent-amber-light uppercase">Google Apps Script Engine v3.1</span>
+              <span class="text-white/40">•</span>
+              <span class="text-xs text-gray-300">Zero-Data-Loss Guaranteed</span>
+            </div>
+            <div class="hidden md:flex items-center gap-2 text-xs text-gray-300">
+              <span>STATUS PENYIMPANAN:</span>
+              <span class="font-bold text-pastel-emerald-fg bg-pastel-emerald-bg px-2.5 py-0.5 rounded-full">18.4 MB / 50.0 MB Aman</span>
+            </div>
+          </div>
+          <h1 class="font-headline text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
+            Pusat Portabilitas & Cadangan Kelas
+          </h1>
+          <p class="text-sm sm:text-base text-gray-300 leading-relaxed max-w-3xl mt-2">
+            Pindahkan seluruh administrasi kelas ke akun wali kelas baru tanpa input ulang data (1-Click ZIP Engine Berbasis Google Apps Script & JSZip).
+          </p>
+
+          <!-- Micro Metrics -->
+          <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="rounded-xl bg-white/[0.06] p-3.5 backdrop-blur-sm border border-white/10">
+              <p class="text-[11px] text-gray-400 uppercase font-semibold">Integritas Arsip</p>
+              <p class="text-lg font-bold text-white mt-0.5">100% SHA-256</p>
+              <span class="text-[11px] text-pastel-emerald-fg font-medium">Validasi Otomatis</span>
+            </div>
+            <div class="rounded-xl bg-white/[0.06] p-3.5 backdrop-blur-sm border border-white/10">
+              <p class="text-[11px] text-gray-400 uppercase font-semibold">Waktu Pemulihan</p>
+              <p class="text-lg font-bold text-accent-amber-light mt-0.5">&lt; 30 Detik</p>
+              <span class="text-[11px] text-gray-300 font-medium">Ekstraksi Instan</span>
+            </div>
+            <div class="rounded-xl bg-white/[0.06] p-3.5 backdrop-blur-sm border border-white/10">
+              <p class="text-[11px] text-gray-400 uppercase font-semibold">Entitas Sinkron</p>
+              <p class="text-lg font-bold text-cyan-400 mt-0.5">249 Record</p>
+              <span class="text-[11px] text-gray-300 font-medium">Sheets & Drive Files</span>
+            </div>
+            <div class="rounded-xl bg-white/[0.06] p-3.5 backdrop-blur-sm border border-white/10">
+              <p class="text-[11px] text-gray-400 uppercase font-semibold">Protokol Keamanan</p>
+              <p class="text-lg font-bold text-pastel-violet-fg mt-0.5">Script Properties</p>
+              <span class="text-[11px] text-pastel-emerald-fg font-medium">Enkripsi Aman</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Floating Dual Card Workspace Container -->
+      <section class="relative z-10 mx-auto -mt-10 w-full max-w-[1320px] px-4 sm:px-6 pb-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- LEFT CARD: EKSPOR PAKET CADANGAN ZIP -->
+          <div class="flex flex-col justify-between overflow-hidden rounded-2xl bg-surface-pure-white shadow-xl border border-slate-200">
+            <div>
+              <div class="h-1.5 w-full bg-primary"></div>
+              <div class="p-6">
+                <div class="flex items-start justify-between gap-3 pb-4">
+                  <div>
+                    <div class="inline-flex items-center gap-1.5 rounded-md bg-indigo-50 px-2.5 py-1 text-primary mb-1">
+                      <span class="material-symbols-outlined text-[16px]">archive</span>
+                      <span class="text-[11px] font-bold uppercase tracking-wider">Modul Ekspor Utama</span>
+                    </div>
+                    <h2 class="font-headline text-xl font-bold text-on-surface">Ekspor Paket Cadangan ZIP</h2>
+                    <p class="text-xs text-gray-500 mt-1">Kompilasi instan seluruh struktur Google Sheets dan folder dokumen menjadi 1 file ZIP.</p>
+                  </div>
+                  <div class="w-12 h-12 rounded-2xl bg-pastel-violet-bg text-primary flex items-center justify-center shrink-0 shadow-sm">
+                    <span class="material-symbols-outlined text-[26px]">drive_folder_upload</span>
+                  </div>
+                </div>
+
+                <!-- Entity Checklist -->
+                <div class="rounded-xl bg-slate-50 p-4 border border-slate-200 space-y-2.5 my-3 text-xs">
+                  <div class="flex items-center justify-between text-gray-700">
+                    <span class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-status-present-emerald text-[18px]">check_circle</span>
+                      <span>Biodata Siswa Lengkap</span>
+                    </span>
+                    <strong class="font-bold">36 Siswa</strong>
+                  </div>
+                  <div class="flex items-center justify-between text-gray-700">
+                    <span class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-status-present-emerald text-[18px]">check_circle</span>
+                      <span>Rekam Presensi Harian</span>
+                    </span>
+                    <strong class="font-bold">180 Baris</strong>
+                  </div>
+                  <div class="flex items-center justify-between text-gray-700">
+                    <span class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-status-present-emerald text-[18px]">check_circle</span>
+                      <span>Jurnal Bimbingan & Prestasi</span>
+                    </span>
+                    <strong class="font-bold">15 Catatan</strong>
+                  </div>
+                  <div class="flex items-center justify-between text-gray-700">
+                    <span class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-status-present-emerald text-[18px]">check_circle</span>
+                      <span>Katalog Berkas Google Drive</span>
+                    </span>
+                    <strong class="font-bold">6 Dokumen</strong>
+                  </div>
+                </div>
+
+                <div class="p-3 rounded-xl bg-indigo-50/60 border border-indigo-100 text-xs text-indigo-900 flex items-center gap-2.5">
+                  <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+                  <span>File terkompresi otomatis dengan manifest verifikasi integritas SHA-256.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 pt-0">
+              <button onclick="App.exportZipNow()" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-secondary-container to-accent-amber-light text-hero-indigo-900 font-headline font-bold text-xs shadow-lg hover:shadow-xl hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">download_for_offline</span>
+                <span>Unduh File Cadangan ZIP (.zip)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT CARD: RESTORE DATA DARI WALI KELAS LAMA -->
+          <div class="flex flex-col justify-between overflow-hidden rounded-2xl bg-surface-pure-white shadow-xl border border-slate-200">
+            <div>
+              <div class="h-1.5 w-full bg-status-permission-amber"></div>
+              <div class="p-6">
+                <div class="flex items-start justify-between gap-3 pb-4">
+                  <div>
+                    <div class="inline-flex items-center gap-1.5 rounded-md bg-amber-50 px-2.5 py-1 text-status-permission-amber mb-1">
+                      <span class="material-symbols-outlined text-[16px]">restore</span>
+                      <span class="text-[11px] font-bold uppercase tracking-wider">Modul Pemulihan Data</span>
+                    </div>
+                    <h2 class="font-headline text-xl font-bold text-on-surface">Pulihkan Data dari ZIP Lama</h2>
+                    <p class="text-xs text-gray-500 mt-1">Impor paket arsip dari wali kelas sebelumnya. Seluruh tabel akan dipulihkan secara idempoten.</p>
+                  </div>
+                  <div class="w-12 h-12 rounded-2xl bg-accent-amber-subtle text-status-permission-amber flex items-center justify-center shrink-0 shadow-sm">
+                    <span class="material-symbols-outlined text-[26px]">unarchive</span>
+                  </div>
+                </div>
+
+                <!-- Drag & Drop Zone -->
+                <div id="zip-dropzone" ondragover="App.handleDragOver(event)" ondragleave="App.handleDragLeave(event)" ondrop="App.handleDrop(event)" onclick="document.getElementById('zip-file-input').click()" class="border-2 border-dashed border-slate-300 hover:border-primary rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/70 hover:bg-indigo-50/30 my-3">
+                  <input type="file" id="zip-file-input" accept=".zip" class="hidden" onchange="App.handleFileSelect(event)"/>
+                  <div class="w-12 h-12 mx-auto rounded-2xl bg-indigo-50 text-primary flex items-center justify-center mb-2">
+                    <span class="material-symbols-outlined text-[28px]">cloud_upload</span>
+                  </div>
+                  <p class="font-headline text-sm font-bold text-on-surface">Tarik & Lepas File ZIP ke Sini</p>
+                  <p class="text-xs text-gray-500 mt-0.5">atau <span class="text-primary font-bold underline">klik untuk memilih berkas</span> (.zip)</p>
+                  <p class="text-[11px] text-gray-400 mt-2" id="zip-file-chosen-text">Maksimal ukuran file: 40 MB</p>
+                </div>
+
+                <!-- Restore Progress Bar (Hidden by default) -->
+                <div id="restore-progress-container" class="hidden rounded-xl bg-slate-50 p-3.5 border border-slate-200">
+                  <div class="flex items-center justify-between text-xs font-semibold text-gray-700 mb-1.5">
+                    <span id="restore-progress-status">Memverifikasi berkas ZIP...</span>
+                    <span id="restore-progress-percent">0%</span>
+                  </div>
+                  <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                    <div id="restore-progress-bar" class="bg-primary h-full w-0 transition-all duration-300"></div>
+                  </div>
+                </div>
+
+                <!-- Warning Notice -->
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5 mt-3">
+                  <span class="material-symbols-outlined text-status-permission-amber text-[20px] shrink-0">warning</span>
+                  <span><strong>Idempoten:</strong> Pemulihan data akan menggabungkan data tanpa membuat duplikat NIS siswa.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 pt-0">
+              <button id="restore-action-btn" onclick="App.triggerRestore()" class="w-full py-3.5 px-6 rounded-xl bg-primary text-white font-headline font-bold text-xs shadow-lg hover:bg-primary-container active:scale-95 transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">play_circle</span>
+                <span>Mulai Pemulihan Data Otomatis</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <!-- ========================================================
+         VIEW 8: PANEL ADMIN SEKOLAH & SETUP
+         ======================================================== -->
+    <div id="view-admin" class="view-section">
+      <div class="max-w-[1320px] mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-primary uppercase tracking-wider">Admin Control Room</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-gray-700">Manajemen Sekolah</span>
+            </div>
+            <h1 class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight mt-0.5">Panel Kontrol & Konfigurasi API</h1>
+          </div>
+          <button onclick="App.openApiModal()" class="px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-md active:scale-95 transition-all flex items-center gap-1.5 self-start sm:self-auto">
+            <span class="material-symbols-outlined text-[18px]">link</span>
+            <span>Hubungkan URL GAS Backend</span>
+          </button>
+        </div>
+
+        <!-- Class List Grid -->
+        <div class="bg-surface-pure-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-bold text-gray-700">Daftar Kelas & Penugasan Wali Kelas</span>
+            <span class="text-xs text-status-present-emerald font-bold">4 Kelas Terdaftar</span>
+          </div>
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-b border-slate-200 text-gray-500 uppercase tracking-wider font-bold">
+                <tr>
+                  <th class="py-3 px-4">Kode Kelas</th>
+                  <th class="py-3 px-4">Nama Kelas</th>
+                  <th class="py-3 px-4">Tingkat</th>
+                  <th class="py-3 px-4">Wali Kelas Bertugas</th>
+                  <th class="py-3 px-4">NIP</th>
+                  <th class="py-3 px-4 text-center">Status Instance</th>
+                  <th class="py-3 px-4 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3.5 px-4 font-mono font-bold text-primary">KLS-VIIB</td>
+                  <td class="py-3.5 px-4 font-bold">Kelas VII-B (Aktif)</td>
+                  <td class="py-3.5 px-4">Kelas VII</td>
+                  <td class="py-3.5 px-4 font-semibold">Bpk. Ahmad, S.Pd.</td>
+                  <td class="py-3.5 px-4 text-gray-500">19880412 201402 1 003</td>
+                  <td class="py-3.5 px-4 text-center">
+                    <span class="px-2.5 py-0.5 rounded-full bg-status-present-bg text-status-present-emerald font-bold text-[10px]">Aktif & Terhubung</span>
+                  </td>
+                  <td class="py-3.5 px-4 text-center">
+                    <button onclick="App.navigateTo('dasbor')" class="px-2.5 py-1 rounded-lg bg-indigo-50 text-primary font-bold hover:bg-indigo-100">Buka Dasbor</button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3.5 px-4 font-mono font-bold text-gray-600">KLS-VIIA</td>
+                  <td class="py-3.5 px-4 font-bold">Kelas VII-A</td>
+                  <td class="py-3.5 px-4">Kelas VII</td>
+                  <td class="py-3.5 px-4 font-semibold">Ibu Siti Nurhaliza, M.Pd.</td>
+                  <td class="py-3.5 px-4 text-gray-500">19900315 201503 2 001</td>
+                  <td class="py-3.5 px-4 text-center">
+                    <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-gray-600 font-bold text-[10px]">Siap Diinisialisasi</span>
+                  </td>
+                  <td class="py-3.5 px-4 text-center">
+                    <button onclick="App.showToast('Gunakan fitur Portabilitas ZIP untuk inisialisasi kelas VII-A', 'info')" class="px-2.5 py-1 rounded-lg bg-slate-100 text-gray-700 font-semibold hover:bg-slate-200">Inisialisasi</button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3.5 px-4 font-mono font-bold text-gray-600">KLS-VIIIC</td>
+                  <td class="py-3.5 px-4 font-bold">Kelas VIII-C</td>
+                  <td class="py-3.5 px-4">Kelas VIII</td>
+                  <td class="py-3.5 px-4 font-semibold">Bpk. Hendra Gunawan, S.Pd.</td>
+                  <td class="py-3.5 px-4 text-gray-500">19850720 201001 1 008</td>
+                  <td class="py-3.5 px-4 text-center">
+                    <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-gray-600 font-bold text-[10px]">Siap Diinisialisasi</span>
+                  </td>
+                  <td class="py-3.5 px-4 text-center">
+                    <button onclick="App.showToast('Gunakan fitur Portabilitas ZIP untuk inisialisasi kelas VIII-C', 'info')" class="px-2.5 py-1 rounded-lg bg-slate-100 text-gray-700 font-semibold hover:bg-slate-200">Inisialisasi</button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="py-3.5 px-4 font-mono font-bold text-gray-600">KLS-IXA</td>
+                  <td class="py-3.5 px-4 font-bold">Kelas IX-A</td>
+                  <td class="py-3.5 px-4">Kelas IX</td>
+                  <td class="py-3.5 px-4 font-semibold">Ibu Sri Rahayu, S.Pd.</td>
+                  <td class="py-3.5 px-4 text-gray-500">19830210 200801 2 004</td>
+                  <td class="py-3.5 px-4 text-center">
+                    <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-gray-600 font-bold text-[10px]">Siap Diinisialisasi</span>
+                  </td>
+                  <td class="py-3.5 px-4 text-center">
+                    <button onclick="App.showToast('Gunakan fitur Portabilitas ZIP untuk inisialisasi kelas IX-A', 'info')" class="px-2.5 py-1 rounded-lg bg-slate-100 text-gray-700 font-semibold hover:bg-slate-200">Inisialisasi</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================================
+       FOOTER
+       ======================================================== -->
+  <footer class="w-full bg-hero-dark-900 border-t border-white/[0.08] text-gray-400 text-xs py-10 mt-12">
+    <div class="max-w-[1320px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined text-[20px]">school</span>
+        </div>
+        <div>
+          <p class="font-headline text-white font-bold">SI AWK - Sistem Informasi Administrasi Wali Kelas</p>
+          <p class="text-[11px] text-gray-500">Platform Tata Kelola Digital & Portabilitas Data Berbasis Google Apps Script</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-4 text-xs">
+        <button onclick="App.navigateTo('landing')" class="hover:text-white transition-colors">Beranda</button>
+        <button onclick="App.navigateTo('dasbor')" class="hover:text-white transition-colors">Dasbor</button>
+        <button onclick="App.navigateTo('portabilitas')" class="hover:text-white transition-colors">Portabilitas ZIP</button>
+        <button onclick="App.openApiModal()" class="text-accent-amber-light hover:underline font-semibold">Konfigurasi API</button>
+      </div>
+      <p class="text-[11px] text-gray-500">© 2026 SI AWK. Hak Cipta Dilindungi.</p>
+    </div>
+  </footer>
+
+  <!-- ========================================================
+       MODAL 1: TAMBAH / EDIT SISWA
+       ======================================================== -->
+  <div id="modal-add-student" class="modal-overlay fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-surface-pure-white rounded-2xl shadow-2xl max-w-xl w-full p-6 border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <h3 class="font-headline text-lg font-bold text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[22px]">person_add</span>
+          Tambah Siswa Baru
+        </h3>
+        <button onclick="App.closeAddStudentModal()" class="text-gray-400 hover:text-gray-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      
+      <form id="form-add-student" onsubmit="App.handleSaveStudent(event)" class="overflow-y-auto custom-scrollbar py-4 space-y-3.5 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">NIS (Nomor Induk Siswa) *</label>
+            <input type="text" name="nis" required placeholder="Contoh: 242507037" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">NISN (10 Digit) *</label>
+            <input type="text" name="nisn" required placeholder="Contoh: 0123456737" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Nama Lengkap Siswa *</label>
+          <input type="text" name="nama" required placeholder="Nama lengkap sesuai akta lahir" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Jenis Kelamin *</label>
+            <select name="jk" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary bg-white">
+              <option value="L">Laki-laki (L)</option>
+              <option value="P">Perempuan (P)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Agama</label>
+            <select name="agama" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary bg-white">
+              <option value="Islam">Islam</option>
+              <option value="Kristen">Kristen</option>
+              <option value="Katolik">Katolik</option>
+              <option value="Hindu">Hindu</option>
+              <option value="Buddha">Buddha</option>
+              <option value="Konghucu">Konghucu</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Tempat Lahir</label>
+            <input type="text" name="tmpLahir" placeholder="Kota kelahiran" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Tanggal Lahir</label>
+            <input type="date" name="tglLahir" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Nama Ayah / Wali</label>
+            <input type="text" name="ayah" placeholder="Nama ayah" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Nama Ibu</label>
+            <input type="text" name="ibu" placeholder="Nama ibu" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">No. HP / WhatsApp Orang Tua</label>
+          <input type="tel" name="hpOrtu" placeholder="08..." class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Alamat Tinggal</label>
+          <textarea name="alamat" rows="2" placeholder="Alamat lengkap domisili siswa" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="App.closeAddStudentModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-gray-700 hover:bg-slate-50 font-semibold">Batal</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-bold shadow-md">Simpan Siswa</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 2: CATAT JURNAL / BK
+       ======================================================== -->
+  <div id="modal-add-journal" class="modal-overlay fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-surface-pure-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-200 overflow-hidden flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="font-headline text-lg font-bold text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-pastel-violet-fg text-[22px]">psychology</span>
+          Catat Kejadian / Bimbingan
+        </h3>
+        <button onclick="App.closeAddJournalModal()" class="text-gray-400 hover:text-gray-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="form-add-journal" onsubmit="App.handleSaveJournal(event)" class="py-4 space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Pilih Siswa *</label>
+          <select name="nis" id="journal-student-select" required class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary bg-white">
+            <!-- Injected via JS -->
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Tanggal Kejadian *</label>
+            <input type="date" name="tanggal" required id="journal-input-date" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+          </div>
+          <div>
+            <label class="block font-semibold text-gray-700 mb-1">Kategori *</label>
+            <select name="kategori" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary bg-white">
+              <option value="Prestasi">Prestasi & Penghargaan</option>
+              <option value="Bimbingan" selected>Bimbingan & Konseling</option>
+              <option value="Pelanggaran">Pelanggaran Tata Tertib</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Judul Kejadian / Peristiwa *</label>
+          <input type="text" name="judul" required placeholder="Contoh: Juara Lomba / Konseling Tugas" class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"/>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Uraian Masalah / Keterangan</label>
+          <textarea name="uraian" rows="2" placeholder="Deskripsi kronologis peristiwa..." class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Tindak Lanjut / Kesepakatan Wali Kelas</label>
+          <textarea name="tindakLanjut" rows="2" placeholder="Tindakan yang diambil atau rekomendasi..." class="w-full px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-primary"></textarea>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+          <button type="button" onclick="App.closeAddJournalModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-gray-700 hover:bg-slate-50 font-semibold">Batal</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-bold shadow-md">Simpan Catatan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 3: PENGATURAN URL BACKEND GAS (gas-pro-api)
+       ======================================================== -->
+  <div id="modal-api-config" class="modal-overlay fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-surface-pure-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-200">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="font-headline text-lg font-bold text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[22px]">settings_ethernet</span>
+          Konfigurasi REST API GAS
+        </h3>
+        <button onclick="App.closeApiModal()" class="text-gray-400 hover:text-gray-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="py-4 space-y-4 text-xs">
+        <p class="text-gray-600">
+          Aplikasi SI AWK menggunakan arsitektur <strong>gas-pro-api</strong>. Anda dapat menghubungkan WebApp frontend ini ke backend Google Apps Script Anda.
+        </p>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Google Apps Script Web App URL (/exec):</label>
+          <input type="url" id="input-gas-url" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-primary font-mono text-xs"/>
+          <p class="text-[11px] text-gray-500 mt-1">Biarkan kosong jika ingin menggunakan mode simulasi lokal/demo berkecepatan 0ms.</p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-gray-600 space-y-1 text-[11px]">
+          <p><strong>Panduan Deploy GAS:</strong></p>
+          <p>1. Buka file <code>backend/Kode.gs</code> di editor Google Apps Script.</p>
+          <p>2. Jalankan fungsi <code>setupAppEnvironment()</code> sekali untuk auto-generate Spreadsheet & Drive.</p>
+          <p>3. Klik <strong>Deploy → New deployment</strong> (Pilih: <em>Web App</em>, Execute as: <em>Me</em>, Who has access: <em>Anyone</em>).</p>
+          <p>4. Salin URL Web App dan tempelkan di kotak di atas.</p>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="App.closeApiModal()" class="px-4 py-2 rounded-xl border border-slate-200 text-gray-700 hover:bg-slate-50 font-semibold">Tutup</button>
+          <button type="button" onclick="App.saveApiUrl()" class="px-5 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-bold shadow-md">Simpan URL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       TOAST NOTIFICATION CONTAINER
+       ======================================================== -->
+  <div id="toast-container"></div>
+
+  <!-- ========================================================
+       JAVASCRIPT MODULES
+       ======================================================== -->
+  <script src="js/config.js"></script>
+  <script src="js/mockData.js"></script>
+  <script src="js/zipEngine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
+
